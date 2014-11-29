@@ -1,4 +1,9 @@
+import sys
 import sqlite3
+
+
+if sys.version_info < (3, ):
+    bytes = str
 
 
 class Backend(object):
@@ -12,7 +17,7 @@ class Backend(object):
         data = self.cur.fetchone()
         if not data:
             raise KeyError(key)
-        return data[1]
+        return bytes(data[1])
 
     def __setitem__(self, key, value):
         q = 'REPLACE INTO kv (id, value) VALUES (?, ?)'

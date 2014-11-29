@@ -2,7 +2,36 @@
 Dict-style key value wrapper around some embeded databases
 ==========================================================
 
-Backends: sqlite, kyoto cabinet, semidbm
+Usage
+=====
+
+    >>> import unidbm
+    >>> db = unidbm.open('sqlite', path=':memory:')
+
+Set and get data:
+
+    >>> db['foo'] = ['bar', {'baz': 1}]
+    >>> db['foo']
+    ['bar', {'baz': 1}]
+
+Iterate:
+
+    >>> [str(key) for key in db]
+    ['foo']
+
+Delete:
+
+    >>> del db['foo']
+    >>> len(db)
+    0
+
+Backends
+========
+- sqlite
+- kyoto cabinet
+- semidbm
+
+
 '''
 from __future__ import absolute_import
 try:
@@ -57,7 +86,7 @@ class DBM(DictMixin):
             return default
 
 
-def open(backend, serialize=True, dumper='json',
+def open(backend, serialize=True, dumper='pickle',
          compress=False, compress_level=9,
          **backend_kwargs):
     mdl = backend_kwargs['middlewares'] = []

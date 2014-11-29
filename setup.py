@@ -16,8 +16,9 @@ readme = module.__doc__.strip()
 
 with open('README.md', 'w', 'utf-8') as f:
     f.write(readme)
-assert not doctest.testfile(
-    'README.md', optionflags=doctest.REPORT_ONLY_FIRST_FAILURE).failed
+if doctest.testfile('README.md',
+                    optionflags=doctest.REPORT_ONLY_FIRST_FAILURE).failed:
+    sys.exit(1)
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')

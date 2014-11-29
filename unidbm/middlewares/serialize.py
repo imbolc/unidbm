@@ -16,7 +16,7 @@ class SerializeMiddleware(object):
         self.pickle_protocol = pickle_protocol
         assert dumper in ['pickle', 'json', 'marshal'], 'unknown dumper'
         if dumper == 'pickle':
-            self.load = lambda data: pickle_loads
+            self.load = pickle_loads
             self.dump = lambda data: pickle.dumps(
                 data, protocol=self.pickle_protocol)
         elif dumper == 'json':
