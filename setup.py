@@ -16,11 +16,12 @@ readme = module.__doc__.strip()
 
 with open('README.md', 'w', 'utf-8') as f:
     f.write(readme)
+assert not doctest.testfile(
+    'README.md', optionflags=doctest.REPORT_ONLY_FIRST_FAILURE).failed
 
 if sys.argv[-1] == 'publish':
-    if not doctest.testfile('README.md', verbose=True).failed:
-        os.system('python setup.py sdist upload')
-        sys.exit(0)
+    os.system('python setup.py sdist upload')
+    sys.exit(0)
 
 setup(
     name=module.__name__,
@@ -31,12 +32,8 @@ setup(
     author_email='imbolc@imbolc.name',
     url='https://github.com/imbolc/%s' % name,
     packages=[name],
-    package_data={'': ['LICENSE', 'NOTICE'], 'requests': ['*.pem']},
-    package_dir={'requests': 'requests'},
-    include_package_data=True,
     install_requires=[],
     license='ISC',
-    zip_safe=False,
     classifiers=(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
