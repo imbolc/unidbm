@@ -14,11 +14,11 @@ import unidbm as module
 name = module.__name__
 readme = module.__doc__.strip()
 
+with open('README.md', 'w', 'utf-8') as f:
+    f.write(readme)
+
 if sys.argv[-1] == 'publish':
-    filename = 'README.md'
-    with open(filename, 'w', 'utf-8') as f:
-        f.write(readme)
-    if not doctest.testfile(filename, verbose=True).failed:
+    if not doctest.testfile('README.md', verbose=True).failed:
         os.system('python setup.py sdist upload')
         sys.exit(0)
 
