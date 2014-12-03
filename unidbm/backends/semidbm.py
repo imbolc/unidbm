@@ -17,7 +17,10 @@ class Backend(object):
         del self.db[key]
 
     def __len__(self):
-        return len(self.db)
+        count = 0
+        for k in self.db:
+            count += 1
+        return count
 
     def __iter__(self):
         return (key for key in self.db)

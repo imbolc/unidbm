@@ -1,7 +1,7 @@
 import zlib
 
 
-class CompressMiddleware(object):
+class Middleware(object):
     def __init__(self, compress_level=9):
         self.compress_level = compress_level
 

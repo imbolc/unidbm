@@ -29,3 +29,7 @@ Backends
 - sqlite
 - kyoto cabinet
 - semidbm
+
+Run tests
+=========
+    $ py.test
