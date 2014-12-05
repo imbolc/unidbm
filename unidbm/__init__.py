@@ -57,7 +57,7 @@ from . import middlewares
 from .utils import name_to_object
 
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 
 if sys.version_info < (3, ):

@@ -32,7 +32,11 @@ setup(
     author='Imbolc',
     author_email='imbolc@imbolc.name',
     url='https://github.com/imbolc/%s' % name,
-    packages=[name],
+    packages=[
+        'unidbm',
+        'unidbm.backends',
+        'unidbm.middlewares',
+    ],
     install_requires=[],
     license='ISC',
     classifiers=(
