@@ -10,18 +10,18 @@ Usage
 
 Set and get data:
 
-    >>> db['foo'] = ['bar', {'baz': 1}]
-    >>> db['foo']
+    >>> db[u'foo'] = ['bar', {'baz': 1}]
+    >>> db[u'foo']
     ['bar', {'baz': 1}]
 
 Iterate:
 
-    >>> [str(key) for key in db]
-    ['foo']
+    >>> [key for key in db] == [u'foo']
+    True
 
 Delete:
 
-    >>> del db['foo']
+    >>> del db[u'foo']
     >>> len(db)
     0
 
