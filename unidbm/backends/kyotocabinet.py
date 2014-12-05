@@ -2,6 +2,7 @@
 aptitude install libkyotocabinet-dev
 pip install kyotocabinet
 '''
+from __future__ import absolute_import
 from kyotocabinet import DB
 
 

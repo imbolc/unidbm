@@ -10,10 +10,13 @@ import unidbm.backends.kyotocabinet
 import unidbm.backends.semidbm
 
 
+BACKENDS = [('sqlite', 'test.sqlite'),
+            ('kyotocabinet', 'test.kch'),
+            ('semidbm', u'test.semidbm')]
+
+
 def test():
-    for backend_name, path in [('sqlite', 'test.sqlite'),
-                               ('kyotocabinet', 'test.kch'),
-                               ('semidbm', u'test.semidbm')]:
+    for backend_name, path in BACKENDS:
         # print(backend_name)
         path = os.path.join(os.path.dirname(__file__), path)
         remove_db_files(path)
@@ -21,14 +24,16 @@ def test():
 
         assert len(db) == 0
 
-        # set
+        # setitem
         k, v = encode('foo', 'bar')
         db[k] = v
         k, v = encode('baz', 'spam')
         db[k] = v
+
+        # len
         assert len(db) == 2
 
-        # get
+        # getitem
         assert db[k] == v
         with raises(KeyError):
             db['not found']

@@ -57,7 +57,7 @@ from . import middlewares
 from .utils import name_to_object
 
 
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 
 if sys.version_info < (3, ):
@@ -67,16 +67,11 @@ else:
 
 
 class DBM(DictMixin):
-    def __init__(self, backend, *args, **kwargs):
-        '''
-        :param backend:         string or object of backend
-        :param middlewrares:    (optional) list of middlewares
-        :param **kwargs:        (optional) arguments that backend takes
-        '''
-        middlewares = kwargs.pop('middlewares', [])
-        self.set_middlewares = [name_to_object(m) for m in middlewares]
-        self.get_middlewares = reversed(self.set_middlewares)
-        self.backend = name_to_object(backend)(**kwargs)
+    def __init__(self, backend, middlewares=None):
+        middlewares = middlewares or []
+        self.backend = backend
+        self.set_middlewares = middlewares
+        self.get_middlewares = self.set_middlewares[::-1]
 
     def __getitem__(self, key):
         key = self._encode_key(key)
@@ -101,12 +96,6 @@ class DBM(DictMixin):
     def __iter__(self):
         return (k.decode('utf-8') for k in self.backend)
 
-    def get(self, key, default=None):
-        try:
-            return self[key]
-        except KeyError:
-            return default
-
     @staticmethod
     def _encode_key(key):
         if not isinstance(key, unicode):
@@ -117,12 +106,27 @@ class DBM(DictMixin):
 def open(backend, serialize=True, dumper='pickle',
          compress=False, compress_level=9,
          **backend_kwargs):
-    mdl = backend_kwargs['middlewares'] = []
+    mdls = []
     if serialize:
-        mdl.append(
-            middlewares.SerializeMiddleware(dumper=dumper))
+        mdls.append(get_dumper(dumper)())
     if compress:
-        mdl.append(
-            middlewares.CompressMiddleware(compress_level=compress_level))
-    backend = backends.NAMES.get(backend, backend)
-    return DBM(backend, **backend_kwargs)
+        middleware = name_to_object(middlewares.NAMES['compress'])
+        mdls.append(middleware(compress_level=compress_level))
+    backend = get_backend(backend)(**backend_kwargs)
+    return DBM(backend, middlewares=mdls)
+
+
+def get_dumper(name):
+    name = middlewares.NAMES.get(name, name)
+    try:
+        return name_to_object(name)
+    except ImportError:
+        raise ImportError('Unknown dumper: {}'.format(name))
+
+
+def get_backend(name):
+    name = backends.NAMES.get(name, name)
+    try:
+        return name_to_object(name)
+    except ImportError:
+        raise ImportError('Unknown backend: {}'.format(name))
